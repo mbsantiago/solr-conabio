@@ -226,7 +226,8 @@ def _generate_facet(config):
     For field type facet you must specify the following fields:
 
     1. field
-        Field with which to bucketize documents.
+        Field with which to bucketize documents. This field can be a list of
+        fields.
 
     For range type facet you must specify the following fields:
 
@@ -255,7 +256,11 @@ def _generate_facet(config):
 
     if 'field' in config:
         field = config['field']
-        elements.append('facet.field={}'.format(field))
+        if not isinstance(field, (list, tuple)):
+            field = [field]
+
+        for field_ in field:
+            elements.append('facet.field={}'.format(field_))
 
         if 'mincount' in config:
             mincount = config['mincount']
